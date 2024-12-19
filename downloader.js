@@ -39,7 +39,7 @@ async function downloadSurah(qari, surah) {
     });
 }
 
-async function downloadMushaf(qari) {
+async function downloadQuran(qari) {
     printProgress();
     await Promise.all(
         Array(totalSurahs).fill().map(async (x, i) => {
@@ -67,12 +67,14 @@ const printProgress = () => {
     process.stdout.write(`Downloading ${drawProgressBar(progressPercentage)}`);
 }
 
-// downloadMushaf("noreen_siddiq");
-// downloadMushaf("abdulbaset_warsh");
-
-if (!process.argv[2]) {
+const qari = process.argv[2];
+const supported_qari_ids = require("./qari_ids.json");
+if (!qari) {
     console.log("Please provide a qari");
     process.exit(1);
+} else if (!supported_qari_ids.includes(qari)) {
+    console.log(`Qari ${qari} is not supported, choose from the following:\n\n${supported_qari_ids.join("\n")}`);
+    process.exit(1);
 } else {
-    downloadMushaf(process.argv[2]);
+    downloadQuran(process.argv[2]);
 }
